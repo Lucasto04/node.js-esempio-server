@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "start": "node src/index.js",
-    "dev": "nodemon -w src/index.js -w src/routes-books.js -w src/db.js src/index.js"
+    "dev": "nodemon -w src/index.js -w src/routes-books.js -w src/routes-libraries.js -w src/db.js src/index.js"
   },
   "author": "",
   "license": "ISC",

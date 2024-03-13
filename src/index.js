@@ -11,6 +11,8 @@ import {
   create,
 } from "./routes-books.js";
 
+import { addBookToLibrary } from "./routes-libraries.js";
+
 // quando arriva una chiamata che contiene delle informazioni in JSON
 // allora prendi quello stream di dati e convertilo in JSON appunto
 // questo risultato mettilo dentro l'attributo req.body
@@ -26,9 +28,11 @@ app.put("/books/:id", updateSingle);
 app.delete("/books/:id", deleteSingle);
 
 // library
-// endpoint per aggiungere un libro ad una libreria
 // endpoint per muovere un libro da una libreria ad un'altra
-// endpoint per prendere in prestito un libro\
+// endpoint per prendere in prestito un libro
+
+// endpoint per aggiungere un libro ad una libreria
+app.post("/libraries/:libraryId/books/:bookId", addBookToLibrary);
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
