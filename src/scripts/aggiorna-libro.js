@@ -1,6 +1,6 @@
-async function invia() {
-  let res = await fetch("http://localhost:3000/books", {
-    method: "POST",
+async function invia(id) {
+  let res = await fetch(`http://localhost:3000/books/${id}`, {
+    method: "PUT",
     headers: {
       Accept: "application/json",
       "Content-Type": "application/json",
@@ -9,10 +9,10 @@ async function invia() {
       title: "1984",
       author: "George Orwell",
       description: "dystopic world",
-      publisher: "boh",
+      publisher: "Quel Publisher",
     }),
   });
   let json = await res.json();
   console.log(json.status, res.status);
 }
-invia();
+invia(1);

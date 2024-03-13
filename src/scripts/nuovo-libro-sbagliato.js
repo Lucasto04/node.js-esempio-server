@@ -6,7 +6,6 @@ async function invia() {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      title: "1984",
       author: "George Orwell",
       description: "dystopic world",
       publisher: "boh",
