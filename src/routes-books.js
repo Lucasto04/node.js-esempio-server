@@ -7,6 +7,8 @@ export const getAll = async (req, res) => {
 
 export const getSingle = async (req, res) => {
   let db = await readDb();
+  // req.params.id e' cio' che viene dopo books/ e rappresenta la scelta
+  // dell'id da visualizzare da parte dell'utente
   let book = db.books.find((book) => book.id == req.params.id);
   // oppure con la filter, ma non e' il massimo perche' ottengo un array, quando
   // invece volevo un oggetto
