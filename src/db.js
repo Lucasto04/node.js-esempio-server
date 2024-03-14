@@ -1,3 +1,4 @@
+import { log } from "node:console";
 import fs from "node:fs/promises";
 
 export async function readDb() {
@@ -32,15 +33,21 @@ export async function saveLibraries(libraries) {
   await fs.writeFile("./db.json", JSON.stringify(db));
 }
 
-// assume che la libreria identifdicata da libraryId esista
-export async function removeBookFromLibrary(libraryId, bookId) {
+// assume che la libreria esista
+export async function removeBookFromLibrary(library, bookId) {
   let db = await readDb();
   let libraries = db.libraries;
-  let library = libraries.find((lib) => lib.id == libraryId);
   // si puo' fare anche con la slice
   let otherBooks = library.books.filter((bid) => bid != bookId);
-  library.books = otherBooks;
-  saveLibraries(libraries);
+
+  // aggiorno i libri della libreria
+  for (let i = 0; i < libraries.length; i++) {
+    if (libraries[i].id == library.id) {
+      libraries[i].books = otherBooks;
+    }
+  }
+
+  await saveLibraries(libraries);
 }
 
 export async function addBookToLibraryAndSave(libraryId, bookId) {

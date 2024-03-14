@@ -3,13 +3,14 @@ import {
   getLibraryForBook,
   removeBookFromLibrary,
   addBookToLibraryAndSave,
+  readDb,
 } from "./db.js";
 
 export const addBookToLibrary = async (req, res) => {
   // "/libraries/:libraryId/books/:bookId"
 
-  let libraryId = req.params.libraryId;
-  let bookId = req.params.bookId;
+  let libraryId = parseInt(req.params.libraryId, 10);
+  let bookId = parseInt(req.params.bookId, 10);
 
   // controllare se library esiste
   if (!(await exists("libraries", libraryId))) {
@@ -30,16 +31,14 @@ export const addBookToLibrary = async (req, res) => {
       .send({ status: "error", msg: "book already in this library" });
   }
 
-  console.log(libraryContainingBook);
-
   // cosa dobbiamo fare se book e' dentro un'altra library?
   if (libraryContainingBook) {
     // togliere il libro da quella library
-    removeBookFromLibrary(libraryContainingBook.id, bookId);
+    await removeBookFromLibrary(libraryContainingBook, bookId);
   }
 
   // aggiungiamo il libro alla library
-  addBookToLibraryAndSave(libraryId, bookId);
+  await addBookToLibraryAndSave(libraryId, bookId);
 
   res.json({ status: "ok" });
 };

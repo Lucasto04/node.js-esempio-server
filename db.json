@@ -6,10 +6,17 @@
       "description": "dystopic world",
       "publisher": "boh",
       "id": 1
+    },
+    {
+      "title": "Il Signore degli Anelli",
+      "author": "Tolkien",
+      "description": "fantasy world",
+      "publisher": "boh",
+      "id": 2
     }
   ],
   "libraries": [
-    { "id": 1, "name": "Minas Tirith's library", "books": ["1"] },
-    { "id": 2, "name": "Hogwarts' library", "books": ["1"] }
+    { "id": 1, "name": "Minas Tirith's library", "books": [2] },
+    { "id": 2, "name": "Hogwarts' library", "books": [1] }
   ]
 }
