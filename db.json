@@ -17,6 +17,13 @@
   ],
   "libraries": [
     { "id": 1, "name": "Minas Tirith's library", "books": [2] },
-    { "id": 2, "name": "Hogwarts' library", "books": [1] }
+    { "id": 2, "name": "Hogwarts' library", "books": [1, 2] }
+  ],
+  "users": [
+    {
+      "username": "Leila",
+      "token": "h725",
+      "routes": [{ "name": "/books", "verbs": ["GET"] }]
+    }
   ]
 }

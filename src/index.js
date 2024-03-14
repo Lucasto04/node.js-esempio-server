@@ -12,12 +12,26 @@ import {
 } from "./routes-books.js";
 
 import { addBookToLibrary } from "./routes-libraries.js";
-import { swap } from "./db.js";
+import { swap, isAuthenticated } from "./db.js";
 
 // quando arriva una chiamata che contiene delle informazioni in JSON
 // allora prendi quello stream di dati e convertilo in JSON appunto
 // questo risultato mettilo dentro l'attributo req.body
 app.use(bodyParser.json());
+
+// dentro gli headers della req controlliamo il token dell'utente
+// se il token consente di fare questa chiamata, chiamiamo next
+// altrimenti ritorniamo uno status opportuno
+app.use(async function (req, res, next) {
+  console.log(req.headers, req.path);
+  // ciclare su tutti gli utenti
+  // per quelli che hanno questo token, controlliamo se possono vedere questa rotta
+  if (await isAuthenticated(req.headers, req.path)) {
+    next();
+  } else {
+    res.status(401).json({ status: "error", msg: "not authorized" });
+  }
+});
 
 app.post("/books", create);
 // :id vuol dire
