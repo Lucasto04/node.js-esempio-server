@@ -57,3 +57,11 @@ export async function addBookToLibraryAndSave(libraryId, bookId) {
   library.books.push(bookId);
   saveLibraries(libraries);
 }
+
+export async function swap() {
+  let db = await readDb();
+  let dbOld = await fs.readFile("./db-old.json");
+  let stringContent = dbOld.toString();
+  await fs.writeFile("./db.json", stringContent);
+  await fs.writeFile("./db-old.json", JSON.stringify(db));
+}

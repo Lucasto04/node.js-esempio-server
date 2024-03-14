@@ -12,6 +12,7 @@ import {
 } from "./routes-books.js";
 
 import { addBookToLibrary } from "./routes-libraries.js";
+import { swap } from "./db.js";
 
 // quando arriva una chiamata che contiene delle informazioni in JSON
 // allora prendi quello stream di dati e convertilo in JSON appunto
@@ -33,6 +34,11 @@ app.delete("/books/:id", deleteSingle);
 
 // endpoint per aggiungere un libro ad una libreria
 app.post("/libraries/:libraryId/books/:bookId", addBookToLibrary);
+
+app.put("/undo", function (req, res) {
+  swap();
+  return res.json({ status: "ok" });
+});
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
