@@ -22,7 +22,8 @@ app.use(bodyParser.json());
 // dentro gli headers della req controlliamo il token dell'utente
 // se il token consente di fare questa chiamata, chiamiamo next
 // altrimenti ritorniamo uno status opportuno
-app.use(async function (req, res, next) {
+
+async function requireAutentication(req, res, next) {
   console.log(req.headers, req.path);
   // ciclare su tutti gli utenti
   // per quelli che hanno questo token, controlliamo se possono vedere questa rotta
@@ -31,25 +32,28 @@ app.use(async function (req, res, next) {
   } else {
     res.status(401).json({ status: "error", msg: "not authorized" });
   }
-});
-
-app.post("/books", create);
+}
+app.post("/books", requireAutentication, create);
 // :id vuol dire
 // qualsiasi cosa tu, utente del mio server, scrivi dopo books/ mettila dentro una
 // variabile che puo' essere accduta tramite req.params
 app.get("/books/:id", getSingle);
 app.get("/books", getAll);
-app.put("/books/:id", updateSingle);
-app.delete("/books/:id", deleteSingle);
+app.put("/books/:id", requireAutentication, updateSingle);
+app.delete("/books/:id", requireAutentication, deleteSingle);
 
 // library
 // endpoint per muovere un libro da una libreria ad un'altra
 // endpoint per prendere in prestito un libro
 
 // endpoint per aggiungere un libro ad una libreria
-app.post("/libraries/:libraryId/books/:bookId", addBookToLibrary);
+app.post(
+  "/libraries/:libraryId/books/:bookId",
+  requireAutentication,
+  addBookToLibrary
+);
 
-app.put("/undo", function (req, res) {
+app.put("/undo", requireAutentication, function (req, res) {
   swap();
   return res.json({ status: "ok" });
 });

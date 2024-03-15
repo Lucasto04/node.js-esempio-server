@@ -1,8 +1,39 @@
 import { readDb } from "./db.js";
 
 export const getAll = async (req, res) => {
+  let foundBooks = [];
   let db = await readDb();
-  res.json({ status: "ok", books: db.books }); // ritormno al client ok e il valore della chiave books
+  let keys = Object.keys(req.query);
+  if (keys.length == 0) {
+    res.json({ status: "ok", books: db.books });
+    return;
+  }
+  for (let j = 0; j < db.books.length; j++) {
+    let book = db.books[j];
+    let count = 0;
+    for (let i = 0; i < keys.length; i++) {
+      let key = keys[i];
+      if (book[key] == req.query[key]) {
+        count++;
+      }
+    }
+    if (req.query.choice == "or") {
+      if (count > 0) {
+        // almeno una condizione e' rispettata
+        // OR
+        foundBooks.push(book);
+      }
+    } else {
+      //TUTTE le condizioni sono rispettate
+      //AND
+      if (count == keys.length) {
+        foundBooks.push(book);
+      }
+    }
+  }
+  console.log(req.query);
+  res.json({ status: "ok", books: foundBooks });
+  // ritormno al client ok e il valore della chiave books
 };
 
 export const getSingle = async (req, res) => {
