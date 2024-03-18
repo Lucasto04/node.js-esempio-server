@@ -1,4 +1,4 @@
-async function invia(bookid) {
+async function invia(bookId) {
   let res = await fetch("http://localhost:3000/books", {
     method: "GET",
     headers: {

@@ -1,9 +1,10 @@
-import { readDb } from "./db.js";
+import { readDb, updateStats } from "./db.js";
 
 export const getAll = async (req, res) => {
   let foundBooks = [];
   let db = await readDb();
   let keys = Object.keys(req.query);
+  console.log(db.books);
   if (keys.length == 0) {
     res.json({ status: "ok", books: db.books });
     return;
@@ -31,7 +32,6 @@ export const getAll = async (req, res) => {
       }
     }
   }
-  console.log(req.query);
   res.json({ status: "ok", books: foundBooks });
   // ritormno al client ok e il valore della chiave books
 };

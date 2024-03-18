@@ -12,7 +12,15 @@ import {
 } from "./routes-books.js";
 
 import { addBookToLibrary } from "./routes-libraries.js";
-import { swap, isAuthenticated } from "./db.js";
+import {
+  readDb,
+  swap,
+  isAuthenticated,
+  updateStats,
+  updateUnauthorized,
+  deleteTasks,
+} from "./db.js";
+import { longTasks } from "./routes-tasks.js";
 
 // quando arriva una chiamata che contiene delle informazioni in JSON
 // allora prendi quello stream di dati e convertilo in JSON appunto
@@ -23,13 +31,21 @@ app.use(bodyParser.json());
 // se il token consente di fare questa chiamata, chiamiamo next
 // altrimenti ritorniamo uno status opportuno
 
+function updatePath(req, res, next) {
+  updateStats(req.method + " " + req.path);
+  next();
+}
+app.use(updatePath);
+
 async function requireAutentication(req, res, next) {
   console.log(req.headers, req.path);
   // ciclare su tutti gli utenti
   // per quelli che hanno questo token, controlliamo se possono vedere questa rotta
+
   if (await isAuthenticated(req.headers, req.path)) {
     next();
   } else {
+    updateUnauthorized();
     res.status(401).json({ status: "error", msg: "not authorized" });
   }
 }
@@ -58,6 +74,15 @@ app.put("/undo", requireAutentication, function (req, res) {
   return res.json({ status: "ok" });
 });
 
+app.get("/stats", async (req, res) => {
+  let db = await readDb();
+
+  res.status(200).json({ status: "ok", stats: db.stats });
+});
+
+app.post("/long-task", longTasks);
+
 app.listen(port, () => {
+  deleteTasks();
   console.log(`Example app listening on port ${port}`);
 });

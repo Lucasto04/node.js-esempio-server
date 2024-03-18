@@ -25,5 +25,7 @@
       "token": "h725",
       "routes": [{ "name": "/books", "verbs": ["GET"] }]
     }
-  ]
+  ],
+  "stats": { "GET /books": 2, "POST /long-task": 2 },
+  "tasks": { "1": false }
 }

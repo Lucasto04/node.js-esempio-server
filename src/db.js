@@ -83,3 +83,39 @@ export async function isAuthenticated(headers, path) {
   }
   return false;
 }
+//aggiorniamo il database nella parte delle statistiche
+export async function updateStats(methodAndPath) {
+  let db = await readDb();
+  //verifichiamo se è presente questo chiave(percorso)
+  if (db.stats[methodAndPath]) {
+    //se c'è incrementiamo
+    db.stats[methodAndPath] = db.stats[methodAndPath] + 1;
+  } else {
+    //altrimenti creiamo la nuova chiave
+    db.stats[methodAndPath] = 1;
+  }
+  await fs.writeFile("./db.json", JSON.stringify(db));
+}
+
+export async function updateUnauthorized() {
+  let db = await readDb();
+  if (db.stats.unauthorizedAccess) {
+    db.stats.unauthorizedAccess = db.stats.unauthorizedAccess + 1;
+  } else {
+    db.stats.unauthorizedAccess = 1;
+  }
+  await fs.writeFile("./db.json", JSON.stringify(db));
+}
+
+export async function deleteTasks() {
+  let db = await readDb();
+  db.tasks = {};
+  await fs.writeFile("./db.json", JSON.stringify(db));
+}
+
+export async function taskChanged(idTask, status) {
+  let db = await readDb();
+  //aggiungo all'oggetto Tasks una chiave idTask a cui assegno un booleano
+  db.tasks[idTask] = status;
+  await fs.writeFile("./db.json", JSON.stringify(db));
+}
