@@ -22,6 +22,9 @@ import {
 } from "./db.js";
 import { longTasks } from "./routes-tasks.js";
 import { getUrl } from "./routes-dimensions.js";
+
+import { runJob } from "./jobs/sync-images-sizes.js";
+
 // quando arriva una chiamata che contiene delle informazioni in JSON
 // allora prendi quello stream di dati e convertilo in JSON appunto
 // questo risultato mettilo dentro l'attributo req.body
@@ -86,5 +89,8 @@ app.get("/dimensions", getUrl);
 
 app.listen(port, () => {
   deleteTasks();
+  // 60000 qua e' messo a "caso", in uno scenario reale e' bene dimensionarlo in base
+  // alla frequenza di aggiornamento del dato che stiamo sincronizzando
+  runJob(60000);
   console.log(`Example app listening on port ${port}`);
 });
