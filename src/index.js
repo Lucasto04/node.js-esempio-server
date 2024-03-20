@@ -21,7 +21,7 @@ import {
   deleteTasks,
 } from "./db.js";
 import { longTasks } from "./routes-tasks.js";
-
+import { getUrl } from "./routes-dimensions.js";
 // quando arriva una chiamata che contiene delle informazioni in JSON
 // allora prendi quello stream di dati e convertilo in JSON appunto
 // questo risultato mettilo dentro l'attributo req.body
@@ -81,6 +81,8 @@ app.get("/stats", async (req, res) => {
 });
 
 app.post("/long-task", longTasks);
+
+app.get("/dimensions", getUrl);
 
 app.listen(port, () => {
   deleteTasks();
