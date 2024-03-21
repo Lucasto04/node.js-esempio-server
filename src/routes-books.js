@@ -1,4 +1,5 @@
 import { readDb, updateStats } from "./db.js";
+import { connect, close, createBook } from "./mongodb-connection.js";
 
 export const getAll = async (req, res) => {
   let foundBooks = [];
@@ -89,25 +90,16 @@ export const updateSingle = async (req, res) => {
   }
 };
 
-let bookId = 1;
-let db = await readDb();
-if (db.books.length) {
-  bookId = db.books[db.books.length - 1].id + 1; // prendo ultimo id dell'array e aumento di uno
-} // se non entra nel then allora rimane a 1 quindi non occorre else
 export const create = async (req, res) => {
-  let db = await readDb();
-  let titleExists = await bookTitleExists(req.body.title);
+  // TODO gestire con MONGODB
+  //let titleExists = await bookTitleExists(req.body.title);
+  let titleExists = false;
   if (bookIsValid(req.body) && !titleExists) {
     // req.body è un oggetto
-    // aggiungere una nuova proprietà a req.body il cui valore è bookId
-    req.body.id = bookId;
-    // req.body["id"] = bookId
-    db.books.push(req.body); // pusho richiesta in books
     // se book inviato da utente è valido (libro dentro req.body)
     // scrivi su db solo se ci sono tutti i dati previsti (bookIsValid)
-    await fs.writeFile("./db.json", JSON.stringify(db)); // aggiorno db
+    await createBook(req.body);
     res.status(201).json({ status: "ok" });
-    bookId++;
   } else {
     res.status(400).json({ status: "error" });
   }

@@ -2,6 +2,7 @@ async function invia() {
   let res = await fetch("http://localhost:3000/books", {
     method: "POST",
     headers: {
+      token: "h725",
       Accept: "application/json",
       "Content-Type": "application/json",
     },
