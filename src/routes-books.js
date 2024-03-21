@@ -91,17 +91,18 @@ export const updateSingle = async (req, res) => {
 };
 
 export const create = async (req, res) => {
-  // TODO gestire con MONGODB
-  //let titleExists = await bookTitleExists(req.body.title);
-  let titleExists = false;
-  if (bookIsValid(req.body) && !titleExists) {
+  if (bookIsValid(req.body)) {
     // req.body è un oggetto
     // se book inviato da utente è valido (libro dentro req.body)
     // scrivi su db solo se ci sono tutti i dati previsti (bookIsValid)
-    await createBook(req.body);
-    res.status(201).json({ status: "ok" });
+    let [success, data] = await createBook(req.body);
+    if (success) {
+      res.status(201).json({ status: "ok", id: data });
+    } else {
+      res.status(409).json({ status: "error", msg: data.errmsg });
+    }
   } else {
-    res.status(400).json({ status: "error" });
+    res.status(400).json({ status: "error", msg: "Invalid book attributes" });
   }
 };
 

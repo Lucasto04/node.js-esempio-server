@@ -70,11 +70,9 @@ export async function isAuthenticated(headers, path) {
   let db = await readDb();
   let users = db.users;
   for (let i = 0; i < users.length; i++) {
-    console.log(users[i].token, headers.token);
     if (users[i].token == headers.token) {
       let usersRoutes = users[i].routes;
       for (let j = 0; j < usersRoutes.length; j++) {
-        console.log(usersRoutes[j].name, path);
         if (usersRoutes[j].name == path) {
           return true;
         }

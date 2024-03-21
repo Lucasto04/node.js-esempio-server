@@ -7,13 +7,13 @@ async function invia() {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      title: "1984",
+      title: "19824",
       author: "George Orwell",
       description: "dystopic world",
       publisher: "boh",
     }),
   });
   let json = await res.json();
-  console.log(json.status, res.status);
+  console.log(res.status, json);
 }
 invia();

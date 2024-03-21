@@ -41,7 +41,6 @@ function updatePath(req, res, next) {
 app.use(updatePath);
 
 async function requireAutentication(req, res, next) {
-  console.log(req.headers, req.path);
   // ciclare su tutti gli utenti
   // per quelli che hanno questo token, controlliamo se possono vedere questa rotta
 

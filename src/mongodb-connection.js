@@ -12,13 +12,18 @@ const client = new MongoClient(uri, {
 });
 
 export async function createBook(book) {
-  await connect();
-  const result = await client
-    .db("Cluster-test")
-    .collection("books")
-    .insertOne(book);
-  console.log(`New book created: ${result.insertedId}`);
-  await close();
+  try {
+    await connect();
+    const result = await client
+      .db("Cluster-test")
+      .collection("books")
+      .insertOne(book);
+    return [true, result.insertedId];
+  } catch (err) {
+    return [false, err];
+  } finally {
+    await close();
+  }
 }
 
 export async function connect() {
