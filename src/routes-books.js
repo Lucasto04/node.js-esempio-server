@@ -1,5 +1,10 @@
 import { readDb, updateStats } from "./db.js";
-import { connect, close, createBook } from "./mongodb-connection.js";
+import {
+  connect,
+  close,
+  createBook,
+  updateBook,
+} from "./mongodb-connection.js";
 
 export const getAll = async (req, res) => {
   let foundBooks = [];
@@ -69,24 +74,18 @@ export const deleteSingle = async (req, res) => {
 };
 
 export const updateSingle = async (req, res) => {
-  let db = await readDb();
   // libro da modificare
-  let book = db.books.find((book) => book.id == req.params.id);
-  if (book) {
-    let newBookData = req.body;
-    let titleExists = await bookTitleExists(newBookData.title);
-    if (bookIsValid(newBookData) && !titleExists) {
-      book.title = newBookData.title;
-      book.author = newBookData.author;
-      book.description = newBookData.description;
-      book.publisher = newBookData.publisher;
-      await fs.writeFile("./db.json", JSON.stringify(db));
-      res.json({ status: "ok" }); // ritormno al client ok e il valore della chiave books
+  // TODO cosa facciamo se il record non c'è?
+  let newBookData = req.body;
+  if (bookIsValid(newBookData)) {
+    let [success, data] = await updateBook(newBookData);
+    if (success) {
+      res.json({ status: "ok", data: data }); // ritormno al client ok e il valore della chiave books
     } else {
       res.status(400).json({ status: "error" });
     }
   } else {
-    res.status(404).json({ status: "error" });
+    res.status(400).json({ status: "error" });
   }
 };
 
@@ -105,14 +104,6 @@ export const create = async (req, res) => {
     res.status(400).json({ status: "error", msg: "Invalid book attributes" });
   }
 };
-
-async function bookTitleExists(title) {
-  let db = await readDb();
-  let books = db.books;
-  // tutti i libri che hanno come titolo, title (il parametro)
-  let booksWithSameTitle = books.filter((book) => book.title == title);
-  return booksWithSameTitle.length > 0;
-}
 
 function bookIsValid(book) {
   let keys = Object.keys(book);

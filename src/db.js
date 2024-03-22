@@ -73,7 +73,7 @@ export async function isAuthenticated(headers, path) {
     if (users[i].token == headers.token) {
       let usersRoutes = users[i].routes;
       for (let j = 0; j < usersRoutes.length; j++) {
-        if (usersRoutes[j].name == path) {
+        if (path.startsWith(usersRoutes[j].name)) {
           return true;
         }
       }

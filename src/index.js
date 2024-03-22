@@ -90,6 +90,6 @@ app.listen(port, () => {
   deleteTasks();
   // 60000 qua e' messo a "caso", in uno scenario reale e' bene dimensionarlo in base
   // alla frequenza di aggiornamento del dato che stiamo sincronizzando
-  runJob(60000);
+  // runJob(60000);
   console.log(`Example app listening on port ${port}`);
 });

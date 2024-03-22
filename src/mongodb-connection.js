@@ -26,6 +26,25 @@ export async function createBook(book) {
   }
 }
 
+export async function updateBook(book) {
+  console.log("updateBook", book);
+  try {
+    await connect();
+    const result = await client
+      .db("Cluster-test")
+      .collection("books")
+      // il primo parametro serve ad identificare il book da aggiornare
+      //il secondo serve ad inserire le modifiche attuate
+      .updateOne({ title: book.title }, { $set: book });
+    console.log("updateBook", result);
+    return [true, result.modifiedCount];
+  } catch (err) {
+    console.log("error", err);
+    return [false, err];
+  } finally {
+    await close();
+  }
+}
 export async function connect() {
   await client.connect();
 }
