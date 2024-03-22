@@ -1,4 +1,4 @@
-import { MongoClient, ServerApiVersion } from "mongodb";
+import { MongoClient, ServerApiVersion, ObjectId } from "mongodb";
 import "dotenv/config";
 const uri = process.env.MONGODB_CONNECTION_STRING;
 
@@ -27,7 +27,6 @@ export async function createBook(book) {
 }
 
 export async function updateBook(book) {
-  console.log("updateBook", book);
   try {
     await connect();
     const result = await client
@@ -36,10 +35,27 @@ export async function updateBook(book) {
       // il primo parametro serve ad identificare il book da aggiornare
       //il secondo serve ad inserire le modifiche attuate
       .updateOne({ title: book.title }, { $set: book });
-    console.log("updateBook", result);
+    return [true, result.deleteCount];
+  } catch (err) {
+    return [false, err];
+  } finally {
+    await close();
+  }
+}
+
+export async function deleteBook(id) {
+  try {
+    await connect();
+    const result = await client
+      .db("Cluster-test")
+      .collection("books")
+      // il primo parametro serve ad identificare il book da aggiornare
+      //il secondo serve ad inserire le modifiche attuate
+      .deleteOne({ _id: new ObjectId(id) });
+
     return [true, result.modifiedCount];
   } catch (err) {
-    console.log("error", err);
+    console.log("delete", err);
     return [false, err];
   } finally {
     await close();
